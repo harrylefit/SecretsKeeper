@@ -41,6 +41,19 @@ class KeyStoreWapper(private val context: Context, defaultKeyStoreName: String) 
         }
     }
 
+    fun isExistKeyStore(alias: String): Boolean? {
+        return try {
+            if (SystemServices.hasMarshmallow()) {
+                keyStore.isKeyEntry(alias)
+            } else {
+                defaultKeyStore.isKeyEntry(alias)
+            }
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            false
+        }
+    }
+
     fun removeAndroidKeyStore(alias: String) = keyStore.deleteEntry(alias)
 
     fun createDefaultKeyStoreSymmetricKey(alias: String, password: String) {
@@ -88,7 +101,7 @@ class KeyStoreWapper(private val context: Context, defaultKeyStoreName: String) 
         keyGenerator.init(builder.build())
         return keyGenerator.generateKey()
     }
-    
+
 
     @TargetApi(Build.VERSION_CODES.M)
     private fun initGeneratorWithKeyGenParameterSpec(generator: KeyPairGenerator, alias: String) {

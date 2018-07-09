@@ -14,17 +14,22 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val KEY = "PASSWORD"
+        const val SAVED = "SAVED"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         secrets = getSharedPreferences("StorageSecrets", android.content.Context.MODE_PRIVATE)
+        createKeys()
+        secrets.getString(KEY, null)?.apply {
+            val data = EncryptionServices(applicationContext).decrypt(this, this@MainActivity)
+            tv_decrypted_data?.text = data
+        }
 
         btn_encrypt?.setOnClickListener {
             et_data?.text?.toString()?.apply {
                 if (isPasswordValid(this)) {
-                    createKeys()
                     val encryptedPassword = EncryptionServices(applicationContext).encrypt(this, this@MainActivity)
                     Log.d("Secret", "Original password is: $this")
                     Log.d("Secret", "Saved password is: $encryptedPassword")

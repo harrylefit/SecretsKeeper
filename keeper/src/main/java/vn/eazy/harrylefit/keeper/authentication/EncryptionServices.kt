@@ -23,11 +23,17 @@ class EncryptionServices(context: Context) {
     }
 
     fun createMasterKey(context: Context) {
+        if (isExistMasterKey() == true)
+            return
         if (SystemServices.hasMarshmallow()) {
             createAndroidSymmetricKey()
         } else {
             createDefaultSymmetricKey(SystemServices.getSecureId(context))
         }
+    }
+
+    fun isExistMasterKey(): Boolean? {
+        return keyStoreWrapper.isExistKeyStore(MASTER_KEY)
     }
 
     fun removeMasterKey() {
