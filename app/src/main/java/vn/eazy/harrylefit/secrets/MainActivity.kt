@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         secrets = getSharedPreferences("StorageSecrets", android.content.Context.MODE_PRIVATE)
+//        EncryptionServices(applicationContext).removeMasterKey()
         createKeys()
         secrets.getString(KEY, null)?.apply {
             val data = EncryptionServices(applicationContext).decrypt(this, this@MainActivity)

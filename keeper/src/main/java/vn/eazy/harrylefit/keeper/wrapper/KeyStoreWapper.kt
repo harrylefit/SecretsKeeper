@@ -54,7 +54,13 @@ class KeyStoreWapper(private val context: Context, defaultKeyStoreName: String) 
         }
     }
 
-    fun removeAndroidKeyStore(alias: String) = keyStore.deleteEntry(alias)
+    fun removeAndroidKeyStore(alias: String) {
+        if (SystemServices.hasMarshmallow()) {
+            keyStore.deleteEntry(alias)
+        } else {
+            defaultKeyStore.deleteEntry(alias)
+        }
+    }
 
     fun createDefaultKeyStoreSymmetricKey(alias: String, password: String) {
         val key = generateDefaultSymmetricKey()

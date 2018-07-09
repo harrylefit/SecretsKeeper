@@ -48,19 +48,37 @@ class EncryptionServices(context: Context) {
         }
     }
 
-    fun encrypt(data: String, context: Context): String {
-        return if (SystemServices.hasMarshmallow()) {
-            encryptWithAndroidSymmetricKey(data)
-        } else {
-            encryptWithDefaultSymmetricKey(data, SystemServices.getSecureId(context))
+    fun encrypt(data: String, context: Context): String? {
+        return try {
+            if (isExistMasterKey() == true) {
+                if (SystemServices.hasMarshmallow()) {
+                    encryptWithAndroidSymmetricKey(data)
+                } else {
+                    encryptWithDefaultSymmetricKey(data, SystemServices.getSecureId(context))
+                }
+            } else {
+                null
+            }
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            null
         }
     }
 
-    fun decrypt(data: String, context: Context): String {
-        return if (SystemServices.hasMarshmallow()) {
-            decryptWithAndroidSymmetricKey(data)
-        } else {
-            decryptWithDefaultSymmetricKey(data, SystemServices.getSecureId(context))
+    fun decrypt(data: String, context: Context): String? {
+        return try {
+            if (isExistMasterKey() == true) {
+                if (SystemServices.hasMarshmallow()) {
+                    decryptWithAndroidSymmetricKey(data)
+                } else {
+                    decryptWithDefaultSymmetricKey(data, SystemServices.getSecureId(context))
+                }
+            } else {
+                null
+            }
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            null
         }
     }
 
