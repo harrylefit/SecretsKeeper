@@ -41,6 +41,9 @@ class EncryptionServices(context: Context) {
     }
 
     fun encrypt(data: String, keyPassword: String? = null): String {
+        if (isExistMasterKey() == false) {
+            createMasterKey(keyPassword)
+        }
         return if (SystemServices.hasMarshmallow()) {
             encryptWithAndroidSymmetricKey(data)
         } else {
@@ -50,6 +53,9 @@ class EncryptionServices(context: Context) {
 
     fun encrypt(data: String, context: Context): String? {
         return try {
+            if (isExistMasterKey() == false) {
+                createMasterKey(context)
+            }
             if (isExistMasterKey() == true) {
                 if (SystemServices.hasMarshmallow()) {
                     encryptWithAndroidSymmetricKey(data)
@@ -67,6 +73,9 @@ class EncryptionServices(context: Context) {
 
     fun decrypt(data: String, context: Context): String? {
         return try {
+            if (isExistMasterKey() == false) {
+                createMasterKey(context)
+            }
             if (isExistMasterKey() == true) {
                 if (SystemServices.hasMarshmallow()) {
                     decryptWithAndroidSymmetricKey(data)
@@ -83,6 +92,9 @@ class EncryptionServices(context: Context) {
     }
 
     fun decrypt(data: String, keyPassword: String? = null): String {
+        if (isExistMasterKey() == false) {
+            createMasterKey(keyPassword)
+        }
         return if (SystemServices.hasMarshmallow()) {
             decryptWithAndroidSymmetricKey(data)
         } else {
